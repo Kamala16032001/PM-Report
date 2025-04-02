@@ -1,0 +1,293 @@
+<!-- view_report.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Maintenance Reports</title>
+    <style>
+        /* Global Styles */
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            html, body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #333;
+            }
+
+            /* Container */
+            .container {
+                width: 90%;
+                max-width: 1200px;
+                padding: 20px;
+                border-radius: 8px;
+                position: relative;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Heading */
+            h1 {
+                text-align: center;
+                color: #2c3e50;
+                font-size: 28px;
+                margin-bottom: 20px;
+                position: sticky;
+                top: 0;
+                background-color: #ffffff;
+                padding: 10px 0;
+                z-index: 10; /* Ensures it stays above the other content when scrolling */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Form Styling */
+            form {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+                gap: 10px;
+                position: sticky;
+                top: 60px; /* This is just below the sticky heading */
+                background-color: #ffffff;
+                padding: 10px 0;
+                z-index: 9; /* Sticks below the header */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            form select, form button {
+                padding: 10px 15px;
+                font-size: 16px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                outline: none;
+            }
+
+            form button {
+                background-color: #3498db;
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            form button:hover {
+                background-color: #2980b9;
+            }
+
+            /* Table Styling */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            table th, table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            table th {
+                background-color: #2980b9;
+                color: white;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            table td {
+                font-size: 13px;
+            }
+
+            table tr:hover {
+                background-color: #ecf0f1;
+            }
+
+            /* No reports found message */
+            .no-reports {
+                text-align: center;
+                font-size: 18px;
+                color: #888;
+                padding: 20px;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 1200px) {
+                .container {
+                    width: 95%;
+                }
+
+                table th, table td {
+                    padding: 10px;
+                    font-size: 12px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    width: 100%;
+                    padding: 10px;
+                }
+
+                table th, table td {
+                    padding: 8px;
+                    font-size: 11px;
+                }
+
+                form {
+                    flex-direction: column;
+                }
+
+                form select, form button {
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+            }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Maintenance Reports</h1>
+
+    <form method="get" action="{% url 'view_report' %}">
+        <label for="quarter">Select Quarter:</label>
+        <select name="quarter" id="quarter">
+            <option value="">All</option>
+            <option value="Q1" {% if quarter_search == 'Q1' %}selected{% endif %}>Q1</option>
+            <option value="Q2" {% if quarter_search == 'Q2' %}selected{% endif %}>Q2</option>
+            <option value="Q3" {% if quarter_search == 'Q3' %}selected{% endif %}>Q3</option>
+            <option value="Q4" {% if quarter_search == 'Q4' %}selected{% endif %}>Q4</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+        
+
+    <table>
+        <thead>
+            <tr>
+                <th>PM No</th>
+                <th>Quarter</th>
+                <th>Date</th>
+                <th>Employee Name</th>
+                <th>Employee Number</th>
+                <th>Employee Department</th>
+                <th>Employee Designation</th>
+                <th>CPU Make/Model</th>
+                <th>Serial Number</th>
+                <th>Computer Name</th>
+                <th>IP Address</th>
+                <th>SRO TNSO</th>
+                <th>System Model</th>
+                <th>OS Version</th>
+                <th>Monitor Serial No</th>
+                <th>Mouse Serial No</th>
+                <th>Keyboard Serial No</th>
+                <th>SAP Version</th>
+                <th>Chrome Version</th>
+                <th>Java Version</th>
+                <th>Adobe Reader Version</th>
+                <th>Processor Type</th>
+                <th>RAM Info</th>
+                <th>HDD Info</th>
+                <th>OS Patch</th>
+                <th>LAPS Version</th>
+                <th>DSC Driver Version</th>
+                <th>MS Office Version</th>
+                <th>Indic Tool</th>
+                <th>Keyboard Type</th>
+                <th>Mouse Type</th>
+                <th>Trellix DLP Version</th>
+                <th>Trellix Version</th>
+                <th>Trellix Endpoint</th>
+                <th>Trellix Threat</th>
+                <th>BigFix Control</th>
+                <th>PC Purpose</th>
+                <th>App Installed</th>
+                <th>Location Name</th>
+                <th>Printer Model</th>
+                <th>Printer Serial No</th>
+                <th>Printer Type</th>
+                <th>Printer Status</th>
+                <th>Printer Remark</th>
+                <th>Activity 1 Status</th>
+                <th>Activity 1 Details</th>
+                <th>Activity 2 Status</th>
+                <th>Activity 2 Details</th>
+                <th>Activity 3 Status</th>
+                <th>Activity 3 Details</th>
+                <th>Activity 4 Status</th>
+                <th>Activity 4 Details</th>
+                <th>Activity 5 Status</th>
+                <th>Activity 5 Details</th>
+                <th>Activity 6 Status</th>
+                <th>Activity 6 Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>{{ report.pm_no }}</td>
+                    <td>{{ report.quarter }}</td>
+                    <td>{{ report.date }}</td>
+                    <td>{{ report.employee_name }}</td>
+                    <td>{{ report.employee_number }}</td>
+                    <td>{{ report.employee_department }}</td>
+                    <td>{{ report.employee_designation }}</td>
+                    <td>{{ report.cpu_make_model }}</td>
+                    <td>{{ report.serial_number }}</td>
+                    <td>{{ report.computer_name }}</td>
+                    <td>{{ report.ip_address }}</td>
+                    <td>{{ report.sro_tnso }}</td>
+                    <td>{{ report.system_model }}</td>
+                    <td>{{ report.os_version }}</td>
+                    <td>{{ report.monitor_serial_number }}</td>
+                    <td>{{ report.mouse_serial_number }}</td>
+                    <td>{{ report.keyboard_serial_number }}</td>
+                    <td>{{ report.sap_version }}</td>
+                    <td>{{ report.chrome_version }}</td>
+                    <td>{{ report.java_version }}</td>
+                    <td>{{ report.adobe_reader_version }}</td>
+                    <td>{{ report.processor_type }}</td>
+                    <td>{{ report.ram_info }}</td>
+                    <td>{{ report.hdd_info }}</td>
+                    <td>{{ report.os_patch }}</td>
+                    <td>{{ report.laps_version }}</td>
+                    <td>{{ report.dsc_driver_version }}</td>
+                    <td>{{ report.ms_office_version }}</td>
+                    <td>{{ report.indic_tool }}</td>
+                    <td>{{ report.keyboard_type }}</td>
+                    <td>{{ report.mouse_type }}</td>
+                    <td>{{ report.trellix_dlp_version }}</td>
+                    <td>{{ report.trellix_version }}</td>
+                    <td>{{ report.trellix_endpoint }}</td>
+                    <td>{{ report.trellix_threat }}</td>
+                    <td>{{ report.bigfix_control }}</td>
+                    <td>{{ report.pc_purpose }}</td>
+                    <td>{{ report.app_installed }}</td>
+                    <td>{{ report.location_name }}</td>
+                    <td>{{ report.printer_model }}</td>
+                    <td>{{ report.printer_serial_number }}</td>
+                    <td>{{ report.printer_type }}</td>
+                    <td>{{ report.printer_status }}</td>
+                    <td>{{ report.printer_remark }}</td>
+                    <td>{{ report.activity_1_status }}</td>
+                    <td>{{ report.activity_1_details }}</td>
+                    <td>{{ report.activity_2_status }}</td>
+                    <td>{{ report.activity_2_details }}</td>
+                    <td>{{ report.activity_3_status }}</td>
+                    <td>{{ report.activity_3_details }}</td>
+                    <td>{{ report.activity_4_status }}</td>
+                    <td>{{ report.activity_4_details }}</td>
+                    <td>{{ report.activity_5_status }}</td>
+                    <td>{{ report.activity_5_details }}</td>
+                    <td>{{ report.activity_6_status }}</td>
+                    <td>{{ report.activity_6_details }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

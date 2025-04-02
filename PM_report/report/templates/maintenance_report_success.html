@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Submitted</title>
+    <script type="text/javascript">
+        // When the page loads, show a JavaScript alert
+        window.onload = function() {
+            alert("The maintenance report was submitted successfully!");
+
+            // Redirect to the login page after the user clicks "OK"
+            window.location.href = "{% url 'choice_page' %}";
+        };
+    </script>
+</head>
+<body>
+    <!-- The body can be empty as we're just redirecting after the alert -->
+</body>
+</html>

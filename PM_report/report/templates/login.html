@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Body styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color:rgb(222, 237, 250); /* Light background for subtle contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Arrange logo and login container vertically */
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Logo image */
+        .logo {
+            display: block;
+            width: 120px; /* Adjust logo width */
+            height: auto;
+            margin-bottom: 30px; /* Space below the logo */
+        }
+
+        /* Login container */
+        .login-container {
+            width: 400px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: scale(1.02);
+        }
+
+        .login-container h2 {
+            background-color: #1e73be; /* Dark blue */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"], .captcha-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, .captcha-input:focus {
+            border-color: #1e73be;
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 115, 190, 0.3);
+        }
+
+        .captcha-display {
+            background-color: #e9f4fc;
+            color: #1e73be;
+            font-weight: bold;
+            padding: 14px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 2px solid #1e73be;
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        .captcha-display strong {
+            font-size: 22px;
+            letter-spacing: 3px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            color: white;
+            background-color: #1e73be;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: rgb(241, 130, 39);
+        }
+
+        .eye-icon-container {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            margin-top: -10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .eye-icon-container:hover {
+            color: #1e73be;
+            margin-top: -10px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <!-- Display logo centered at the top -->
+    <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="logo">
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="employee_number">Employee Number:</label>
+            <input type="text" id="employee_number" name="employee_number"  value="{{ employee_number }}" required>
+
+            <label for="password">Password:</label>
+            <div style="position: relative;">
+                <input type="password" id="password" name="password" required>
+                <div class="eye-icon-container" id="togglePassword" onclick="togglePasswordVisibility()">
+                    <i id="eyeIcon" class="fas fa-eye"></i>
+                </div>
+            </div>
+
+            <label for="captcha">Enter the CAPTCHA:</label>
+            <div class="captcha-display">
+                <strong>{{ captcha_text }}</strong>
+            </div>
+            <input type="text" id="captcha" name="captcha" class="captcha-input" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if messages %}
+            <div class="error-messages">
+                {% for message in messages %}
+                    <p class="error">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
+</body>

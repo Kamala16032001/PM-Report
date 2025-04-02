@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choice Page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color:rgb(222, 237, 250);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1e73be;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        .choice-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .choice-container:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .choice-btn {
+            width: 200px;
+            padding: 15px;
+            font-size: 18px;
+            color: white;
+            background-color: #1e73be; /* Blue */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .choice-btn:hover {
+            background-color: #f18227; /* Orange */
+        }
+
+        .choice-btn:active {
+            transform: scale(0.98);
+        }
+
+        .choice-btn i {
+            margin-right: 10px;
+        }
+
+        .logo {
+            display: block;
+            width: 120px; /* Adjust logo width */
+            height: auto;
+            margin-bottom: 30px; /* Space below the logo */
+        }
+
+    </style>
+</head>
+<body>
+
+    <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="logo">
+
+    <h1>Choose Your Access Type</h1>
+    <div class="choice-container">
+        <div class="btn-container">
+            <!-- Button for Employee PC -->
+            <a href="{% url 'login_view' %}">
+                <button class="choice-btn">
+                    <i class="fas fa-user-tie"></i> Employee PC
+                </button>
+            </a>
+
+            <!-- Button for Common PC -->
+            <a href="{% url 'quarter_selection' %}">
+                <button class="choice-btn">
+                    <i class="fas fa-desktop"></i> Common PC
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Add a 'View Report' button -->
+    <a href="{% url 'view_report' %}">
+        <button class="choice-btn">
+            <i class="fas fa-file-alt"></i> View Report
+        </button>
+    </a>
+
+
+</body>
+</html>

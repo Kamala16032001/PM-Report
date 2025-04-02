@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarter Selection Page</title>
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color:rgb(222, 237, 250); /* Light background for subtle contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container Styling with Card Effect */
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        /* Custom Quarter Heading Styling */
+        th {
+            color:rgb(6, 83, 134);
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+
+        td {
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+            width: 70%%;
+        }
+
+        td:hover {
+            background-color: #dfe6e9;
+        }
+
+        /* Select Wrapper Styling */
+        .select-wrapper {
+            width: 100%;
+        }
+
+        /* Stylish Dropdown */
+        select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #3498db;
+            background-color: #ffffff;
+            color: #3498db;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        select:hover {
+            background-color: #ecf0f1;
+            border-color: #2980b9;
+            box-shadow: 0px 4px 10px rgba(41, 128, 185, 0.4);
+        }
+
+        select:focus {
+            background-color: #ffffff;
+            border-color: #2980b9;
+            outline: none;
+            box-shadow: 0px 0px 8px rgba(41, 128, 185, 0.6);
+        }
+
+        /* Note Section Styling */
+        .note {
+            background-color: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #e67e22;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .note p {
+            margin: 0;
+        }
+
+        /* Button Styling */
+        .info-row {
+            text-align: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color:rgb(233, 137, 48);
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th for="quarter">Choose the Quarter :</th>
+                    <td>
+                        <div class="select-wrapper">
+                            <select id="quarter" name="quarter" onchange="updateQuarter()">
+                                <option value="Q1">2025 - Q1</option>
+                                <option value="Q2">2025 - Q2</option>
+                                <option value="Q3">2025 - Q3</option>
+                                <option value="Q4">2025 - Q4</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Note -->
+            <div class="note">
+                <p><strong>* Note: </strong> Q1-[Apr, May, Jun], Q2-[Jul, Aug, Sep], Q3-[Oct, Nov, Dec], Q4-[Jan, Feb, Mar]</p>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="info-row">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+        
+        // Get the quarter dropdown element
+        const quarterSelect = document.getElementById('quarter');
+        
+        // Update each option's text with the current year
+        for (let option of quarterSelect.options) {
+            const quarter = option.value;  // Get the quarter part (Q1, Q2, etc.)
+            option.text = `${currentYear} - ${quarter}`;  // Set the option text as current year - quarter
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+******* PM Report *******
+
+--> Django
+--> SQLite (database)
+
+=> project name - PM_report
+=> app name - report
+=> database name - 'db.sqlite3'
+=> table name - report_employee, report_maintenancereport
+
+--> login password - Cipl@123
+
+* Project flow
+1. Choice page -> Employee Pc -> Login -> Employee Details -> Maintenance report -> submit (save)
+2. Choice page -> Common Pc -> Quarter Selection -> maintenance report -> submit (save)
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Proxy address: http://ishdtnso:Mar@2025@mdproxy.ds.indianoil.in:8080
+
+set HTTP_PROXY=http://ishdtnso:Mar@2025@mdproxy.ds.indianoil.in:8080
+set HTTPS_PROXY=http://ishdtnso:Mar@2025@mdproxy.ds.indianoil.in:8080
+
+---------------------------------------------------------------------------------------------------------------------------
+
+To check 
+* python --version
+* pip --version
+* python -m django --version
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+virtual environment
+-> python -m venv env
+-> to activate --> cd env/Scripts  --> Activate --> cd ../..
+
+Django install 
+-> pip install django
+-> pip install django --proxy=http://ishdtnso:Jan@2025@mdproxy.ds.indianoil.in:8080
+
+Create project 
+-> django-admin startproject myproject
+
+Create App (inside project)
+-> python manage.py startapp myapp
+
+Run
+-> python manage.py runserver
+
+Migrate and Migrations
+-> python manage.py makemigrations
+-> python manage.py migrate
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Installed Libraries
+-> pip install psutil
+-> pip install WMI
+-> pip install pywin32
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Manual Check in Cmd or Powershell
+
+-> Mouse S/N ==> wmic path Win32_PointingDevice get DeviceID, PNPDeviceID (CMD)
+	     ==> Get-WmiObject -Class Win32_PointingDevice | Select-Object DeviceID, PNPDeviceID (Powershell)
+
+-> Keyboard S/N ==> wmic path Win32_Keyboard get DeviceID, PNPDeviceID (CMD)
+		==> Get-WmiObject -Class Win32_Keyboard | Select-Object DeviceID, PNPDeviceID (Powershell)
+
+-> Java version ==> java -version
+
+-> Adobe Acrobat ==> wmic product where "name like 'Adobe Acrobat%'" get Name, Version
+
+-> Outlook version ===> wmic product where "name like 'Microsoft Outlook%'" get Name, Version
+
+-> MS Office version ==> wmic product where "name like 'Microsoft Office%'" get Name, Version
+
+-> IP address ==> ipconfig
+
+-> Chrome version ==> wmic product where "name like 'Google Chrome%'" get version
+
+-> Computer name ==> hostname
+
+-> CPU serial ==> wmic bios get serialnumber
+
+-> Monitor Model ==> wmic computersystem get model
+
+-> CPU Model ==> wmic cpu get caption
+
+-> OS and OS patch ==> wmic os get caption, version, buildnumber
+
+
+---------------------------------------------------------------------------------------------------------------------
+dump into server
+
+pip freeze > requirements.txt
+ALLOWED_HOSTS = ['your-server-ip-or-domain']
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+ssh your_user@your-server-ip  => username, ip, pwd
+ssh -i /path/to/your/private_key your_user@your-server-ip  => for private key
+
+
+sudo apt update
+sudo apt install python3 python3-pip python3-venv
+
+sudo apt install nginx
+
+pip install gunicorn
+
+--> django project to server
+
+sftp your_user@your-server-ip
+cd /path/to/your/server/folder
+put -r /path/to/your/project
+
+cd /path/to/your/project
+python3 -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+sftp your_user@your-server-ip
+cd /path/to/your/project
+put /path/to/your/local/db.sqlite3
+ or 
+scp /path/to/your/local/db.sqlite3 your_user@your-server-ip:/path/to/your/project
+
+
+python manage.py migrate
+
+
+--> staic 
+python manage.py collectstatic
+sudo chown -R www-data:www-data /path/to/your/project
+
+
+gunicorn --workers 3 PM_report.wsgi:application
+
+-> cretae new service file
+sudo nano /etc/systemd/system/your_project.service
+
+--> 
+[Unit]
+Description=Gunicorn instance to serve Django project
+After=network.target
+
+[Service]
+User=your_user
+Group=www-data
+WorkingDirectory=/path/to/your/project
+ExecStart=/path/to/your/project/venv/bin/gunicorn --workers 3 your_project_name.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+--> enable start
+sudo systemctl start your_project
+sudo systemctl enable your_project
+
+
+-->  Configure Nginx as a Reverse Proxy
+
+sudo nano /etc/nginx/sites-available/your_project
+
+--> 
+server {
+    listen 80;
+    server_name your-server-ip-or-domain;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias /path/to/your/project/static/;
+    }
+
+    location /media/ {
+        alias /path/to/your/project/media/;
+    }
+}
+
+-->Enable the Nginx site configuration:
+sudo ln -s /etc/nginx/sites-available/your_project /etc/nginx/sites-enabled
+
+
+->Test Nginx configuration:
+sudo nginx -t
+
+->Restart Nginx to apply changes:
+sudo systemctl restart nginx
+
+--> Allow traffic on port 80 (HTTP) in the firewall if needed:
+sudo ufw allow 'Nginx Full'
+
+
+---> (Optional) Set Up HTTPS (SSL)
+=> Install Certbot:
+sudo apt install certbot python3-certbot-nginx
+
+=>Obtain SSL certificate:
+sudo certbot --nginx -d your-domain.com
+
+=>Test automatic renewal:
+sudo certbot renew --dry-run
+
+
+--> Check and Monitor
+Logs: Monitor your project’s logs for errors. You can view Gunicorn and Nginx logs to troubleshoot any issues.
+Gunicorn log location: /var/log/syslog
+Nginx log location: /var/log/nginx/access.log and /var/log/nginx/error.log
+

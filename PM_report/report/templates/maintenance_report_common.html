@@ -1,0 +1,732 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarterly Prevention Maintenance Report</title>
+    <link rel="icon" href="{% static 'images/logo.gif' %}" type="image/gif">
+    <style>
+        body {
+            background-color: #e9f2f7;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    
+        /* Title */
+        h1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            padding: 20px 30px;
+            background-color: #4A90E2;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.2);
+            border-bottom: 4px solid #2c66b2;
+            border-radius: 12px 12px 0 0;
+            font-size: 2.5rem;
+        }
+
+        /* Logo inside the heading */
+        h1 img {
+            height: 50px;
+            margin-right: 20px;
+        }
+    
+        /* Subtitle */
+        h4 {
+            padding: 15px;
+            font-family: 'Calibri', sans-serif;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            color: #FF6347;
+            background-color: #F5FBFF;
+            border-radius: 10px;
+            margin: 30px auto;
+            width: 65%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    
+        /* Input Fields inside Subtitle */
+        h4 input {
+            margin-left: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 2px solid #4A90E2;
+            transition: all 0.3s ease;
+        }
+    
+        h4 input:focus {
+            border-color: #FF6347;
+            box-shadow: 0 0 10px rgba(255, 99, 71, 0.5);
+        }
+
+        h4 input[type="text"] {
+            width: 12%;
+        }
+    
+        /* Form Styling */
+        form {
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 60%;
+            border-radius: 15px;
+        }
+    
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+    
+        th, td {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            border: 1px solid rgb(179, 212, 250);
+        }
+    
+        th {
+            background-color: #4A90E2; /* Blue background for table headers */
+            color: white;
+            font-size: 16px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+    
+        td {
+            background-color: #f5fbff;
+        }
+    
+        tr:nth-child(even) {
+            background-color: #f7f7f7;
+        }
+    
+        tr:hover {
+            background-color: #e1f7f6;
+        }
+    
+        /* Input Fields Styling in Table */
+        input[type="text"], .no-box {
+            box-sizing: border-box;
+            padding: 12px 15px;
+            font-size: 14px;
+            color: #333;
+            background-color: #f7f7f7;
+            border: 2px solid #4A90E2;
+            border-radius: 8px;
+            width: 100%;
+            transition: all 0.3s ease;
+            outline: none; 
+        }
+        
+        /* Focused Input Fields Styling */
+        input[type="text"]:focus, .no-box:focus {
+            border-color: #FF6347;
+            box-shadow: 0 0 8px rgba(255, 99, 71, 0.5);
+            background-color: #fff;
+            transform: scale(1.02);
+        }
+        
+        /* Input Fields Hover Effect */
+        input[type="text"]:hover, .no-box:hover {
+            border-color: #2c66b2;
+            background-color: #e9f7f9;
+        }
+        
+        
+        /* Placeholder Text Styling */
+        input[type="text"]::placeholder {
+            color: #b0b0b0;
+            font-style: italic;
+        }
+        
+        /* Optional: Add smooth shadow on all inputs */
+        input[type="text"], .no-box {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[disabled], select[disabled] {
+            cursor: not-allowed;
+        }
+    
+        /* Button Styling */
+        button {
+            background-color: #FF6347;
+            color: white;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-left: 45%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+    
+        button:hover {
+            background-color:rgb(21, 121, 253);
+            transform: scale(1.05);
+        }
+    
+        button:active {
+            background-color: #e63946;
+            transform: scale(0.98);
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+        }
+        
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+        }
+
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: opacity 0.3s ease-out;
+        }
+        
+        .loading-container p {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        /* Dot animation */
+        #dots {
+            font-weight: bold;
+            font-size: 24px;
+            color:rgb(17, 18, 19);
+            animation: dotBlink 1.5s infinite ease-in-out;
+        }
+        
+        /* Dots animation */
+        @keyframes dotBlink {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        
+        .failure-message {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e74c3c;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out; /* Smooth fade-in effect */
+        }
+
+        .spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          
+        .spinner::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            border-radius: 50%;
+            background-color: #3498db;
+            animation: dotAnimation 1.5s infinite ease-in-out;
+          }
+          
+        .spinner::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            border-radius: 50%;
+            background-color: #3498db;
+            animation: dotAnimation 1.5s infinite ease-in-out 0.3s;
+        }
+          
+        @keyframes dotAnimation {
+            0% {
+              transform: scale(0.5);
+              opacity: 0.5;
+            }
+            50% {
+              transform: scale(1.5);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(0.5);
+              opacity: 0.5;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+    
+            h4 {
+                flex-direction: column;
+                align-items: center;
+                width: 90%;
+            }
+    
+            table {
+                width: 100%;
+            }
+    
+            .no-box {
+                width: 90%;
+            }
+    
+            form {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>
+            <div class="logo-container">
+                <img src="{% static 'images/logo.gif' %}" alt="Company Logo">
+            </div>
+            QUARTERLY PREVENTIVE MAINTENANCE REPORT</h1>
+
+            <div id="loading" class="loading-container">
+                <p>Please wait, data fetching is in progress <span id="dots">...</span></p>
+                <div class="spinner"></div>
+            </div>
+
+            <div id="failure-message" class="failure-message" style="display: none;">
+                <p>Failed to load system info.</p>
+            </div>
+        
+        <form method="post" id="reportForm">
+        {% csrf_token %}
+            <h4>
+            PM NO: <input type="text" class="small-input" style="margin-right: 15px;" name="pm_no" id="pm_no"  value="{{ pm_no }}" readonly >
+            QUARTER: <input type="text" name="quarter" id="quarter" value="{{ quarter }}" readonly required>
+            LOCATION NAME:
+                <select class="no-box" name="location_name">
+                    <option value="SRO">SRO</option>
+                    <option value="Chennai DO & AO">CHENNAI-DO & AO</option>
+                    <option value="Chennai AFS">CHENNAI-AFS</option>
+                    <option value="Chennai FST-ROY">CHENNAI-FST-ROY</option>
+                    <option value="Madhavaram LMT">MADHAVARAM-LMT</option>
+                    <option value="Tondiarpet IBP(lub)">TONDIARPET-IBP-(LUB)</option>
+                    <option value="Tondiarpet drum plant">TONDIARPET DRUM PLANT</option>
+                    <option value="Manali-CPCL/RCO">MANALI-CPCL/RCO</option>
+                    <option value="Ennore BP">ENNORE-BP</option>
+                    <option value="Korukkupet Term">KORUKKUPET- TERM</option>
+                    <option value="Chengalpet BP">CHENGALPET-BP</option>
+                    <option value="Pondy LPG BP">PONDY-LPG-BP</option>
+                    <option value="Coimbatore LPG BP">COIMBATORE-LPG-BP</option>
+                    <option value="Erode LPG BP">ERODE-LPG-BP</option>
+                    <option value="Irugur TOP">IRUGUR-TOP</option>
+                    <option value="Salem LPG BP">SALEM-LPG-BP</option>
+                    <option value="Salem DO">SALEM-DO</option>
+                    <option value="Sakari TOP">SANKARI-TOP</option>
+                    <option value="Madurai DO & AO">MADURAI-DO&AO</option>
+                    <option value="Illayangudi BP">ILLAYANGUDI-BP</option>
+                    <option value="Tuticorin Term">TUTICORIN-TERM</option>
+                    <option value="Trichy AO & DO">TRICHY-AO &DO</option>
+                    <option value="Trichy TOP Terminal">TRICHY-TOP-TERMINAL</option>
+                    <option value="Mannargudi BP">MANNARGUDI-BP</option>
+                    <option value="Mayiladuthurai LPG BP">MAYILADUTHURAI-LPG-BP</option>
+                    <option value="Ennore ETTPL">ENNORE-ETTPL</option>
+                    <option value="Erode CFA">ERODE-CFA</option>
+                    <option value="Coimbatore Packed">COIMBATORE PACKED</option>
+                    <option value="Sulur AFS">SULUR-AFS</option>
+                    <option value="Coimbatore AFS">COIMBATORE-AFS</option>
+                    <option value="Madurai AFS">MADURAI-AFS</option>
+                    <option value="Tirunelveli BP">TIRUNELVELI-BP</option>
+                    <option value="Tambaram AFS">TAMBARAM-AFS</option>
+                    <option value="Arakonam AFS">ARAKONAM-AFS</option>
+                    <option value="Trichy LPG BP">TRICHY-LPG-BP</option>
+                    <option value="Madurai TOP">MADURAI-TOP</option>
+                    <option value="Madurai LPG BP">MADURAI-LPG-BP</option>
+                    <option value="Trichy AFS">TRICHY-AFS</option>
+                </select>
+            </h4>
+
+            <table>
+                <tr>
+                    <td style="font-weight: bold;">Date:</td>
+                    <td><input type="text" id="date-field" class="no-box" name="date" value={{date}}></td>
+                    <td style="font-weight: bold;">CPU Make/Model</td>
+                    <td><input type="text" class="no-box" id="cpu-make-model" name="cpu_make_model" value="{{cpu_make_model}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">SRO/TNSO</td>
+                    <td>
+                        <select class="no-box" name="sro_tnso">
+                            <option value="SRO">SRO</option>
+                            <option value="TNSO">TNSO</option>
+                        </select>
+                    </td>
+                    <td style="font-weight: bold;">Serial No</td>
+                    <td><input type="text" id="serial-number" name="serial_number" value="{{serial_number}}" class="no-box"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Building / Floor / Cabin</td>
+                    <td><input type="text" class="no-box" name="floor"></td>
+                    <td style="font-weight: bold;">Computer Name</td>
+                    <td><input type="text" id="computer-name" name="computer_name" value="{{computer_name}}" class="no-box"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Name of the User</td>
+                    <td><input type="text" class="no-box" name="employee_name" value="" readonly disabled></td>
+                    <td style="font-weight: bold;">Keyboard Type</td>
+                    <td><input type="text" class="no-box" id="keyboard-type" name="keyboard_type" value="{{keyboard_type}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Employee Code</td>
+                    <td><input type="text" class="no-box" name="employee_number" value="" disabled></td>
+                    <td style="font-weight: bold;">Mouse Type</td>
+                    <td><input type="text" class="no-box" id="mouse-type" name="mouse_type" value="{{mouse_type}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Department</td>
+                    <td><input type="text" class="no-box"  name="employee_department" value="" readonly disabled></td>
+                    <td style="font-weight: bold;">KB: <input type="text" class="no-box" id="keyboard-serial-number" name="keyboard_serial_number" value="{{keyboard_serial_number}}"></td>
+                    <td style="font-weight: bold;">MS:<input type="text" class="no-box" id="mouse-serial-number" name="mouse_serial_number" value="{{mouse_serial_number}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Designation</td>
+                    <td><input type="text" class="no-box"  name="employee_designation" value="" readonly disabled></td>
+                    <td style="font-weight: bold;">IP Address</td>
+                    <td><input type="text" id="ip-address" name="ip_address" value="{{ip_address}}" class="no-box"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Monitor Model / Size</td>
+                    <td><input type="text" id="system-model" name="system_model" value="{{system_model}}" class="no-box"></td>
+                    <td style="font-weight: bold;">Monitor S.No:</td>
+                    <td><input type="text" class="no-box" id="monitor-serial-number" name="monitor_serial_number" value="{{monitor_serial_number}}"></td>
+                </tr>
+            </table>
+            <table style="margin-top: 10px;">
+                <tr style="font-weight: bold;">
+                    <td>Processor Type</td>
+                    <td>HDD Capacity / Type</td>
+                    <td>RAM Capacity and Type</td>
+                    <td>DVD type</td>
+                </tr>
+                <tr style="font-weight: bold; text-align: center;">
+                    <td><input type="text" class="no-box" id="processor-type" name="processor_type" value="{{processor_type}}"></td>
+                    <td><input type="text" class="no-box" id="hdd-info" name="hdd_info" value="{{hdd_info}}"></td>
+                    <td><input type="text" class="no-box" id="ram-info" name="ram_info" value="{{ram_info}}"></td>
+                    <td><input type="text" class="no-box" value='-'></td>
+                </tr>
+            </table>
+            <table style="margin-top: 10px;">
+                <tr>
+                    <td style="font-weight: bold;">Operating System</td>
+                    <td><input type="text" class="no-box" id="os-version" name="os_version" value="{{os_version}}"></td>
+                    <td style="font-weight: bold;">Trellix Agent Ver.</td>
+                    <td><input type="text" class="no-box" id="trellix-version" name="trellix_version" value="{{trellix_version}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">OS Patch / Version</td>
+                    <td><input type="text" class="no-box" id="os-patch" name="os_patch" value="{{os_patch}}"></td>
+                    <td style="font-weight: bold;">Trellix DLP Ver.</td>
+                    <td style="font-weight: bold;"><input type="text" class="no-box" id="trellix-dlp-version" name="trellix_dlp_version" value="{{trellix_dlp_version}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Microsoft Indic Language Input Tool</td>
+                    <td><input type="text" class="no-box" id="indic-tool" name="indic_tool" value="{{indic_tool}}"></td>
+                    <td style="font-weight: bold;">TrellixEnd Point Security Ver.</td>
+                    <td><input type="text" class="no-box" id="trellix-endpoint" name="trellix_endpoint"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">SAP Version</td>
+                    <td><input type="text" class="no-box"  id="sap-version" name="sap_version" value="{{sap_version}}"></td>
+                    <td style="font-weight: bold;">TrellixThreat Prevention</td>
+                    <td><input type="text" class="no-box" id="trellix-threat" name="trellix_threat"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">MS Office Version</td>
+                    <td><input type="text" class="no-box" id="ms-office-version" name="ms_office_version" value="{{ms_office_version}}"></td>
+                    <td style="font-weight: bold;">BigFix Remote Control - Target</td>
+                    <td><input type="text" class="no-box" id="bigfix-control" name="bigfix_control"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Java Version</td>
+                    <td><input type="text" class="no-box"  id="java-version" name="java_version" value="{{java_version}}"></td>
+                    <td style="font-weight: bold;">DSC Driver Version</td>
+                    <td><input type="text" class="no-box" id="dsc-driver-version" name="dsc_driver_version" value="{{dsc_driver_version}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Adobe Reader/DC Ver.</td>
+                    <td><input type="text" class="no-box" id="adobe-reader-version" name="adobe_reader_version" value="{{adobe_reader_version}}"></td>
+                    <td style="font-weight: bold;">Chrome Version</td>
+                    <td><input type="text" class="no-box" id="chrome-version" name="chrome_version" value="{{chrome_version}}"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">LAPS Installed Version</td>
+                    <td><input type="text" class="no-box" id="laps-version" name="laps_version" value="{{laps_version}}"></td>
+                    
+                </tr>
+            </table>
+
+            <table style="margin-top: 10px;">
+                <tr>
+                    <td colspan="4" style="font-weight: bold; color:rgb(252, 58, 58);">* If applicable, fill in the field below. Otherwise, leave it</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Printer Model:</td>
+                    <td><input type="text" class="no-box"  id="" name="printer_model" value=""></td>
+                    <td style="font-weight: bold;">Printer Serial Number</td>
+                    <td><input type="text" class="no-box" id="" name="printer_serial_number" value=""></td>
+                </tr>
+
+                <tr>
+                    <td style="font-weight: bold;">Printer Type:</td>
+                    <td>
+                        <select class="no-box" name="printer_type">
+                            <option value=""></option>
+                            <option value="Single">Single function</option>
+                            <option value="Multi">Multi-function</option>
+                            <option value="Color">Color Printer</option>
+                        </select>
+                    </td>
+                    <td style="font-weight: bold;">Printer Status</td>
+                    <td>
+                        <select class="no-box" name="printer_status">
+                            <option value=""></option>
+                            <option value="Work">Working</option>
+                            <option value="not Work">Not Working</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="font-weight: bold;">Remark <span style="color:rgb(250, 70, 70); font-size: smaller;">
+                        (* if Printer Not Working properly)</span>
+                        <input type="text" class="no-box" id="" name="printer_remark" value="">
+                    </td>
+                </tr>
+            </table>
+
+            <table style="margin-top: 10px;">
+                <tr> 
+                    <th>S.NO</th>
+                    <th>ACTIVITIES TO BE CARRIEDOUT</th>
+                    <th> &nbsp; &nbsp; STATUS &nbsp; &nbsp;</th>
+                    <th>DETAILS</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Immediately inform concerned user in case of any impending crash of hard disk so that remedial action for taking data backup could be initiated</td>
+                    <td>
+                        <select class="no-box" name="activity_1_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="no-box"  id="" name="activity_1_details"></td>
+                </tr>
+                <tr>
+                    <td>2*</td>
+                    <td>Checking of virus and removal of viruses if any of found since last PM</td>
+                    <td>
+                        <select class="no-box" name="activity_2_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="no-box"  id="" name="activity_2_details"></td>
+                </tr>
+                <tr>
+                    <td>3*</td>
+                    <td>Checking of Programs Installed in PC as per IT Security (Autocad, etc..)</td>
+                    <td>
+                        <select class="no-box" name="activity_3_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="no-box"  id="" name="activity_3_details"></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Accessories attached to the computer (Webcam, Speaker, etc..) both logitech</td>
+                    <td>
+                        <select class="no-box" name="activity_4_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="no-box"  id="" name="activity_4_details"></td>
+                </tr>
+                <tr>
+                    <td>5*</td>
+                    <td>CPU and Monitor has been connected to UPS</td>
+                    <td>
+                        <select class="no-box" name="activity_5_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="no-box"  id="" name="activity_5_details" ></td>
+                </tr>
+                <tr>
+                    <td>6*</td>
+                    <td>Check Auto Archive configuration and *.pst files are not stored in C Drive
+                        (Existing Archive files should not exceed 6 GB)
+                    </td>
+                    <td>
+                        <select class="no-box" name="activity_6_status">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td>Archive Size: <input type="text" class="no-box"  id="" name="activity_6_details"></td>
+                </tr>
+                
+                <tr></tr>
+                <tr>
+                    <td style="font-weight: bold;">PC Purpose</td>
+                    <td colspan="3">Additional / Stock / CCTV / Security / GMS Software/ Others (Specify):- <input type="text" class="no-box" id="pc-purpose" name="pc_purpose" > </td>
+                <tr>
+                    <td colspan="4">Any Vendor Specific Software / Application Installed:<input type="text" class="no-box" id="app-installed" name="app_installed"></td>
+                </tr>
+            </table>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // You can show a loading spinner or message to the user while waiting for the system info.
+        const dateField = document.getElementById("date-field");
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        dateField.value = formattedDate;
+
+        const loadingMessage = document.getElementById('loading');
+        const failureMessage = document.getElementById('failure-message');
+        const dotsElement = document.getElementById('dots');
+
+        // Simulate dot animation
+        let dotsCount = 0;
+        const animateDots = () => {
+            setInterval(() => {
+                dotsCount = (dotsCount % 3) + 1;  // Limit dots to 3
+                dotsElement.innerText = '.'.repeat(dotsCount);
+            }, 500); // Change every 500ms
+        };
+    
+        // Async function to fetch system info
+        async function fetchSystemInfo() {
+            animateDots();
+            try {
+                const response = await fetch('/api/system-info');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch system info');
+                }
+    
+                const data = await response.json();
+    
+                // Update the form with the fetched data
+                const fields = [
+                    ['computer-name', data.hostname],
+                    ['serial-number', data.serialNumber],
+                    ['ip-address', data.ipAddress],
+                    ['system-model', data.systemModel],
+                    ['cpu-make-model', data.cpuMakeModel],
+                    ['processor-type', data.processorType],
+                    ['ram-info', data.ramInfo],
+                    ['hdd-info', data.hddInfo],
+                    ['mouse-serial-number', data.mouseSerialNumber],
+                    ['keyboard-serial-number', data.keyboardSerialNumber],
+                    ['mouse-type', data.mouseType],
+                    ['keyboard-type', data.keyboardType],
+                    ['monitor-serial-number', data.monitorSerialNumber],
+                    ['os-version', data.osVersion],
+                    ['sap-version', data.sapVersion],
+                    ['java-version', data.javaVersion],
+                    ['chrome-version', data.chromeVersion],
+                    ['adobe-reader-version', data.adobeReaderVersion],
+                    ['os-patch', data.osPatch],
+                    ['ms-office-version', data.msOfficeVersion],
+                    ['laps-version', data.lapsVersion],
+                    ['indic-tool', data.indicTool],
+                    ['dsc-driver-version', data.dscDriverVersion],
+                    ['trellix-dlp-version', data.trellixDlpVersion],
+                    ['trellix-version', data.trellixVersion],
+                    ['bigfix-control', data.bigfixControl],
+                    ['trellix-threat', data.trellixThreat],
+                ];
+    
+                // Batch DOM updates to reduce the render time
+                fields.forEach(([id, value]) => {
+                    const field = document.getElementById(id);
+                    if (field) {
+                        field.value = value || '-';
+                    }
+                });
+    
+                // Remove the loading message once the data is updated
+                // loadingMessage.remove();
+                loadingMessage.style.display = 'none';
+                failureMessage.style.display = 'none';
+    
+            } catch (error) {
+                console.error('Error fetching system information:', error);
+                loadingMessage.style.display = 'none';
+                failureMessage.style.display = 'block';
+            }
+        }
+        fetchSystemInfo();
+
+    </script>
+    
+</body>
+</html>

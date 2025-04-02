@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f8fa; /* Light background for subtle contrast */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Card container */
+        .employee-card {
+            background-color: white;
+            width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effect on card */
+        .employee-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Card Header */
+        .card-header {
+            background-color: #1e73be; /* Dark blue */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            margin: 25px 0;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            color: #1e73be;
+            width: 50%;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .info-row {
+            margin-bottom: 20px;
+        }
+
+        /* Wrapper for custom dropdown arrow */
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        select {
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;  /* Full width of the cell */
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #333;
+            transition: border-color 0.3s ease;
+            appearance: none; /* Remove default dropdown arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Custom arrow symbol */
+        .select-wrapper::after {
+            content: '▼'; /* Custom arrow symbol */
+            font-size: 14px;
+            color: #333;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Allow clicks through */
+        }
+
+        /* Focus Effect */
+        select:focus {
+            border-color: #1e73be; /* Blue color on focus */
+            outline: none;
+            box-shadow: 0 0 5px rgba(30, 115, 190, 0.3);
+        }
+
+        /* Button Styles */
+        .info-row button {
+            background-color: #1e73be; /* Blue */
+            color: white;
+            font-size: 18px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            width: 40%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            margin-left: 30%;
+        }
+
+        .info-row button:hover {
+            background-color: rgb(245, 144, 61); /* Darker blue on hover */
+        }
+
+        .note p {
+            color: rgb(253, 48, 12);
+            font-size: small;
+            margin-left: 5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="employee-card">
+        <div class="card-header">
+            <h1>Employee Details</h1>
+        </div>
+    
+        <!-- Employee Details Table -->
+        <div class="employee-info">
+            <form method="POST">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <th>Employee Number</th>
+                        <td>{{ employee_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ employee_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Designation</th>
+                        <td>{{ employee.designation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Department</th>
+                        <td>{{ employee.department }}</td>
+                    </tr>
+                    <tr>
+                        <th>SRO/TNSO</th>
+                        <td>{{ employee.sro_tnso }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Location Name</th>
+                        <td>{{ employee.location_name }}</td>
+                    </tr>
+
+                    <!-- Quarter Type Dropdown -->
+                    <tr>
+                        <th for="quarter">Quarter</th>
+                        <td>
+                            <div class="select-wrapper">
+                                <select id="quarter" name="quarter">
+                                    <option value="Q1">2025 - Q1</option>
+                                    <option value="Q2">2025 - Q2</option>
+                                    <option value="Q3">2025 - Q3</option>
+                                    <option value="Q4">2025 - Q4</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Note -->
+                <div class="note">
+                    <p><strong>* Note: </strong> Q1-[Apr, May, Jun], Q2-[Jul, Aug, Sep], Q3-[Oct, Nov, Dec], Q4-[Jan, Feb, Mar]</p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="info-row">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+        
+        // Get the quarter dropdown element
+        const quarterSelect = document.getElementById('quarter');
+        
+        // Update each option's text with the current year
+        for (let option of quarterSelect.options) {
+            const quarter = option.value;  // Get the quarter part (Q1, Q2, etc.)
+            option.text = `${currentYear} - ${quarter}`;  // Set the option text as current year - quarter
+        }
+    </script>
+</body>
+</html>
